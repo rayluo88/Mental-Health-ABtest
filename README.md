@@ -246,8 +246,6 @@ For production deployment, consider:
 
 Built by Raymond Luo as a demonstration of data analytics capabilities for digital mental health product optimization.
 
-**Contact:** [Your contact method]
-
 ---
 
 *This prototype demonstrates the intersection of product analytics, statistical rigor, and domain-specific safety considerations essential for effective digital health platforms.*
