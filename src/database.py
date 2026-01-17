@@ -204,5 +204,15 @@ def generate_session_id() -> str:
     return str(uuid.uuid4())
 
 
+def get_record_count() -> int:
+    """Get count of records in database (for checking if data exists)."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM interactions")
+    count = cursor.fetchone()[0]
+    conn.close()
+    return count
+
+
 # Initialize database on module import
 init_db()

@@ -2,6 +2,8 @@
 
 **A/B Testing for Mental Health Triage Optimization**
 
+🚀 **Live Demo:** [https://mhabtest.streamlit.app](https://mhabtest.streamlit.app)
+
 A full-stack analytics prototype demonstrating how data-driven experimentation can optimize help-seeking behavior on digital mental health platforms like [mindline.sg](https://mindline.sg).
 
 ---

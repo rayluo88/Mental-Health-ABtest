@@ -17,7 +17,7 @@ st.set_page_config(
 )
 
 # Import modules after page config
-from src.database import init_db, generate_session_id, log_event, update_conversion
+from src.database import init_db, generate_session_id, log_event, update_conversion, get_record_count
 from src.experiment import analyze_input, Variant, Severity
 from src.analytics import (
     run_ab_test, get_summary_stats, get_funnel_data,
@@ -30,6 +30,11 @@ import pandas as pd
 
 # Initialize database
 init_db()
+
+# Auto-generate mock data if database is empty (for Streamlit Cloud deployment)
+if get_record_count() == 0:
+    from scripts.generate_mock_data import generate_mock_data
+    generate_mock_data(num_records=500, clear_existing=False)
 
 # Initialize session state
 if "session_id" not in st.session_state:
