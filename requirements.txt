@@ -1,0 +1,26 @@
+# Mind-Log Experimentation Lab
+# Python 3.11+
+
+# Core App
+streamlit>=1.30.0
+
+# NLP & Sentiment Analysis
+vaderSentiment>=3.3.2
+nltk>=3.8.1
+
+# Data & Statistics
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.11.0
+statsmodels>=0.14.0
+
+# Visualization
+plotly>=5.18.0
+altair>=5.2.0
+
+# Database
+sqlalchemy>=2.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+uuid6>=2024.1.12
