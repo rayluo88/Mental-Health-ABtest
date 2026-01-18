@@ -4,7 +4,12 @@
 Build a full-stack analytics prototype demonstrating A/B testing, NLP sentiment analysis, and product analytics dashboards for mental health triage optimization—to showcase senior-level data analyst capabilities for the MOHT interview.
 
 ## Current Phase
-Phase 7 (Final)
+**PROJECT COMPLETE** ✓
+
+### Deliverables
+- **Live Demo:** https://mhabtest.streamlit.app
+- **GitHub Repo:** https://github.com/rayluo88/Mental-Health-ABtest
+- **Local App:** `streamlit run app.py`
 
 ## Phases
 
@@ -78,6 +83,17 @@ Phase 7 (Final)
 - **Status:** complete
 - **Est. Time:** 1 hour
 - **Actual Time:** ~5 mins
+
+### Phase 8: GitHub & Cloud Deployment
+- [x] Initialize git repository
+- [x] Push to GitHub
+- [x] Add auto-data-generation for cloud deployment
+- [x] Create .streamlit/config.toml
+- [x] Deploy to Streamlit Cloud
+- [x] Configure custom subdomain (mhabtest.streamlit.app)
+- [x] Enhance README for interviewers
+- **Status:** complete
+- **Completed:** 2026-01-17
 
 ## Key Questions
 1. Use VADER or TextBlob for sentiment? (VADER better for social media text)

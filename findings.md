@@ -55,16 +55,52 @@ Based on industry standards:
 ## Issues Encountered
 | Issue | Resolution |
 |-------|------------|
-|       |            |
+| "abtest" subdomain taken on Streamlit Cloud | Used "mhabtest" instead |
+| GitHub URL truncated during form fill | App deployed anyway; fixed URL via settings |
+| Auto-generated URL too long | Changed via App Settings to mhabtest.streamlit.app |
+| Empty database on Streamlit Cloud | Added auto-data-generation check in app.py |
+
+## Deployment Findings
+
+### Streamlit Cloud Deployment Pattern
+- Streamlit Cloud spins up fresh instances—database is empty on first run
+- **Solution:** Check `get_record_count()` on startup, auto-generate mock data if empty
+- URL can be changed after deployment via App Settings > General > Custom subdomain
+
+### Auto-Data-Generation Code Pattern
+```python
+# In app.py
+from src.database import get_record_count
+if get_record_count() == 0:
+    from scripts.generate_mock_data import generate_mock_data
+    generate_mock_data(num_records=500, clear_existing=False)
+```
+
+### Streamlit Config for Cloud
+```toml
+# .streamlit/config.toml
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = true
+```
 
 ## Resources
 - VADER docs: https://github.com/cjhutto/vaderSentiment
 - Streamlit docs: https://docs.streamlit.io/
 - statsmodels proportion test: https://www.statsmodels.org/stable/stats.html
 - mindline.sg (reference): https://mindline.sg/
+- Streamlit Cloud: https://share.streamlit.io/
 
-## Visual/Browser Findings
-- [To be updated after researching mindline.sg interface]
+## Final Project Links
+- **Live Demo:** https://mhabtest.streamlit.app
+- **GitHub Repo:** https://github.com/rayluo88/Mental-Health-ABtest
+
+## Mock Data Insights
+- Variant B (Empathetic) shows **+46% lift** in conversion rate
+- Effect strongest among severe cases (~60% improvement)
+- Results statistically significant (p < 0.05)
+- 95% CIs: Variant A [14%, 22%], Variant B [21%, 33%] — no overlap
 
 ---
-*Update this file after every 2 view/browser/search operations*
+*Project completed 2026-01-17*
