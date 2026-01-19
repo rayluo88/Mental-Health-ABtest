@@ -22,8 +22,6 @@
 
 A full-stack analytics prototype demonstrating how **data-driven A/B testing** can optimize help-seeking behavior on digital mental health platforms like [mindline.sg](https://mindline.sg).
 
-**Key Result:** Empathetic messaging shows **+46% lift** in conversion rate vs. clinical tone (p < 0.05).
-
 ---
 
 ## Why This Project?
