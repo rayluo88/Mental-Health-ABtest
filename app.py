@@ -7,6 +7,7 @@ Main Streamlit application entry point.
 
 import time
 import streamlit as st
+import os
 
 # Page config must be first Streamlit command
 st.set_page_config(
@@ -27,6 +28,58 @@ from src.analytics import (
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+
+# ============================================================================
+# VALIDATION CONSTANTS
+# ============================================================================
+
+# Valid referral sources (whitelist to prevent injection)
+VALID_REFERRAL_SOURCES = {
+    "google_search", "facebook_ads", "instagram_ads", "direct",
+    "referral", "email_campaign", "tiktok_ads", "organic", "other"
+}
+
+# Input validation
+MAX_INPUT_LENGTH = 5000  # Characters
+MIN_INPUT_LENGTH = 5
+
+def validate_referral_source(source: str) -> str:
+    """
+    Validate and sanitize referral source.
+
+    Args:
+        source: Raw referral source string (e.g., from UTM parameter)
+
+    Returns:
+        Valid referral source string, or 'direct' if invalid
+    """
+    if not source or source.strip() not in VALID_REFERRAL_SOURCES:
+        return "direct"
+    return source.strip()
+
+
+def anonymize_user_input(text: str) -> str:
+    """
+    Anonymize user input for storage.
+
+    In production, this would:
+    - Strip personally identifiable information (names, emails, phone numbers)
+    - Hash or truncate sensitive data
+    - For this demo, we hash the first 100 chars to prevent exact replay attacks
+
+    Args:
+        text: Raw user input
+
+    Returns:
+        Anonymized version for database logging
+    """
+    import hashlib
+    # Production: Implement proper PII masking (e.g., with regex for email/phone)
+    # For demo: Hash first 100 chars to preserve intent while protecting PII
+    preview = text[:100]
+    text_hash = hashlib.sha256(preview.encode()).hexdigest()[:16]
+    return f"[anonymized:{text_hash}]"
+
 
 # Initialize database
 init_db()
@@ -127,22 +180,35 @@ def show_triage_chat():
     with col1:
         submit = st.button("Share", type="primary", use_container_width=True)
 
-    if submit and user_input.strip():
-        process_input(user_input.strip())
-        st.rerun()
-    elif submit and not user_input.strip():
-        st.warning("Please share how you're feeling before continuing.")
+    if submit:
+        # Validate input
+        if not user_input.strip():
+            st.warning("Please share how you're feeling before continuing.")
+        elif len(user_input) < MIN_INPUT_LENGTH:
+            st.warning(f"Please share at least {MIN_INPUT_LENGTH} characters.")
+        elif len(user_input) > MAX_INPUT_LENGTH:
+            st.error(f"Your message is too long (max {MAX_INPUT_LENGTH} characters). Please shorten it.")
+        else:
+            process_input(user_input.strip())
+            st.rerun()
 
     st.markdown("---")
     st.caption("🔒 Your privacy is protected. No personal data is stored.")
 
 
 def process_input(user_input: str):
-    """Process user input through experiment logic."""
+    """
+    Process user input through experiment logic.
+
+    PII Handling Strategy:
+    - Raw input is analyzed but NOT stored in database
+    - Only anonymized/hashed version is logged
+    - In production: Implement PII masking (email, phone, names) before hashing
+    """
     # Record start time for response latency
     start_time = time.time()
 
-    # Analyze input
+    # Analyze input (analysis doesn't store the text, only metadata)
     result = analyze_input(user_input)
 
     # Calculate response time
@@ -152,15 +218,23 @@ def process_input(user_input: str):
     st.session_state.analysis_result = result
     st.session_state.response_shown_at = time.time()
 
+    # Anonymize input before storage (GDPR/privacy best practice)
+    anonymized_input = anonymize_user_input(user_input)
+
+    # Get validated referral source
+    utm_source = os.getenv("UTM_SOURCE", "direct")
+    validated_source = validate_referral_source(utm_source)
+
     # Log interaction to database
     log_event(
         session_id=st.session_state.session_id,
-        input_text=user_input,  # In production, would anonymize
+        input_text=anonymized_input,  # Anonymized for privacy
         sentiment_score=result.sentiment_score,
         severity_bucket=result.severity.value,
         assigned_variant=result.assigned_variant.value if result.assigned_variant else None,
         response_time_ms=response_time_ms,
         experiment_excluded="crisis_protocol" if result.is_crisis else None,
+        referral_source=validated_source,  # Validated against whitelist
     )
     st.session_state.interaction_logged = True
 

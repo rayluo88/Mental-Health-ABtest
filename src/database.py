@@ -1,6 +1,11 @@
 """
 Database module for Mind-Log Experimentation Lab.
 Implements event schema from PRD v1.1 using SQLite.
+
+Security notes:
+- All queries use parameterized queries to prevent SQL injection
+- Referral source is validated by caller but also checked here for defense-in-depth
+- User input should be anonymized before storage (done in app layer)
 """
 
 import sqlite3
@@ -8,6 +13,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 import uuid
+
+# Valid referral sources (whitelist for defense-in-depth)
+VALID_REFERRAL_SOURCES = {
+    "google_search", "facebook_ads", "instagram_ads", "direct",
+    "referral", "email_campaign", "tiktok_ads", "organic", "other"
+}
 
 # Database path
 DB_PATH = Path(__file__).parent.parent / "data" / "experiment.db"
@@ -73,7 +84,7 @@ def log_event(
 
     Args:
         session_id: Unique identifier for the user session (UUID)
-        input_text: Raw user input (anonymized in production)
+        input_text: User input (should be anonymized by caller)
         sentiment_score: -1.0 (negative) to 1.0 (positive)
         severity_bucket: 'mild', 'moderate', or 'severe'
         assigned_variant: 'A_CLINICAL' or 'B_EMPATHETIC'
@@ -82,11 +93,15 @@ def log_event(
         session_depth: Number of messages in session
         converted: 1 if clicked CTA, 0 if not
         experiment_excluded: Reason if excluded (e.g., 'crisis_protocol')
-        referral_source: UTM parameter for marketing attribution
+        referral_source: UTM parameter for marketing attribution (validated by caller)
 
     Returns:
         The row ID of the inserted record
     """
+    # Defense-in-depth: Validate referral_source (should already be validated by caller)
+    if referral_source and referral_source not in VALID_REFERRAL_SOURCES:
+        referral_source = "direct"
+
     conn = get_connection()
     cursor = conn.cursor()
 
