@@ -178,7 +178,7 @@ def show_triage_chat():
 
     col1, col2 = st.columns([1, 4])
     with col1:
-        submit = st.button("Share", type="primary", use_container_width=True)
+        submit = st.button("Share", type="primary", width="stretch")
 
     if submit:
         # Validate input
@@ -270,7 +270,7 @@ def display_response():
             if st.button(
                 "🤝 Connect with a Counselor",
                 type="primary",
-                use_container_width=True,
+                width="stretch",
                 key="convert_btn"
             ):
                 handle_conversion()
@@ -283,7 +283,7 @@ def display_response():
             if st.button(
                 "Not right now",
                 type="secondary",
-                use_container_width=True,
+                width="stretch",
                 key="decline_btn"
             ):
                 handle_decline()
@@ -436,26 +436,26 @@ def show_analytics_dashboard():
             height=200,
             margin=dict(l=20, r=20, t=40, b=20),
         )
-        st.plotly_chart(fig_ci, use_container_width=True)
+        st.plotly_chart(fig_ci, width="stretch")
 
     with col2:
-        # Summary table
+        # Summary table - all values as strings to avoid Arrow serialization issues
         summary_data = {
             'Metric': ['Sessions', 'Conversions', 'Rate', '95% CI'],
             'Variant A': [
-                ab_result.variant_a_sessions,
-                ab_result.variant_a_conversions,
+                str(ab_result.variant_a_sessions),
+                str(ab_result.variant_a_conversions),
                 f"{ab_result.variant_a_rate:.1%}",
                 f"[{ab_result.variant_a_ci_lower:.1%}, {ab_result.variant_a_ci_upper:.1%}]"
             ],
             'Variant B': [
-                ab_result.variant_b_sessions,
-                ab_result.variant_b_conversions,
+                str(ab_result.variant_b_sessions),
+                str(ab_result.variant_b_conversions),
                 f"{ab_result.variant_b_rate:.1%}",
                 f"[{ab_result.variant_b_ci_lower:.1%}, {ab_result.variant_b_ci_upper:.1%}]"
             ],
         }
-        st.dataframe(pd.DataFrame(summary_data), hide_index=True, use_container_width=True)
+        st.dataframe(pd.DataFrame(summary_data), hide_index=True, width="stretch")
 
         st.caption(f"**Relative Lift:** {ab_result.relative_lift:+.1%} | **Z-stat:** {ab_result.z_statistic:.2f}")
 
@@ -480,7 +480,7 @@ def show_analytics_dashboard():
             height=300,
             margin=dict(l=20, r=20, t=20, b=20),
         )
-        st.plotly_chart(funnel_fig, use_container_width=True)
+        st.plotly_chart(funnel_fig, width="stretch")
         st.caption(f"*{funnel['crisis_excluded']} sessions excluded (crisis protocol)*")
 
     with col2:
@@ -509,7 +509,7 @@ def show_analytics_dashboard():
             margin=dict(l=20, r=20, t=20, b=20),
             legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1)
         )
-        st.plotly_chart(fig_severity, use_container_width=True)
+        st.plotly_chart(fig_severity, width="stretch")
 
     st.markdown("---")
 
@@ -547,7 +547,7 @@ def show_analytics_dashboard():
             yaxis=dict(tickmode='array', tickvals=[0, 1], ticktext=['No', 'Yes']),
             legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1)
         )
-        st.plotly_chart(fig_sentiment, use_container_width=True)
+        st.plotly_chart(fig_sentiment, width="stretch")
 
     with col2:
         st.subheader("⏱️ Time to Decision")
@@ -574,7 +574,7 @@ def show_analytics_dashboard():
             margin=dict(l=20, r=20, t=20, b=20),
             showlegend=False,
         )
-        st.plotly_chart(fig_time, use_container_width=True)
+        st.plotly_chart(fig_time, width="stretch")
 
     st.markdown("---")
 
@@ -600,7 +600,7 @@ def show_analytics_dashboard():
         height=250,
         margin=dict(l=20, r=20, t=20, b=20),
     )
-    st.plotly_chart(fig_utm, use_container_width=True)
+    st.plotly_chart(fig_utm, width="stretch")
 
 
 def show_about():
