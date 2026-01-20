@@ -7,13 +7,22 @@
 
 ## Pre-Demo Setup
 
+### Option 1: Streamlit Cloud (Recommended)
+
+Open **https://mhabtest.streamlit.app** in browser. Have **📊 Analytics Dashboard** tab ready.
+
+*No setup required. App auto-generates fresh mock data on startup.*
+
+### Option 2: Local (Fallback)
+
 ```bash
-cd /Users/raymondluo/Documents/jobs/moht-da-mindline/Experiment_Lab
+cd /path/to/Experiment_Lab
 source .venv/bin/activate
+python scripts/generate_mock_data.py  # If needed
 streamlit run app.py
 ```
 
-Open http://localhost:8501 in browser. Have dashboard tab ready.
+Open http://localhost:8501 in browser.
 
 ---
 
@@ -205,12 +214,13 @@ Open http://localhost:8501 in browser. Have dashboard tab ready.
 
 ## Backup: If Technical Issues
 
-If the app doesn't load:
-1. Check terminal for errors
-2. Regenerate data: `python scripts/generate_mock_data.py`
-3. Fall back to showing the code and PRD document
+If local app doesn't load:
+1. Switch to **https://mhabtest.streamlit.app** (cloud deployment)
+2. If cloud also fails: regenerate data locally with `python scripts/generate_mock_data.py`
+3. Last resort: show code and PRD document
 
 If asked to show code:
 - `src/experiment.py` — NLP and variant logic
 - `src/analytics.py` — Statistical calculations
 - `scripts/generate_mock_data.py` — How I simulated realistic data
+- **GitHub:** https://github.com/rayluo88/Mental-Health-ABtest

@@ -190,6 +190,4 @@ python tests/test_experiment.py
 
 ### **[▶ TRY THE LIVE DEMO](https://mhabtest.streamlit.app)**
 
-*Built for MOHT Data Analyst role interview*
-
 </div>

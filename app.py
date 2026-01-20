@@ -638,7 +638,7 @@ def show_about():
 
     ---
 
-    *Built for MOHT Data Analyst interview demonstration.*
+    *Built for MOHT Data Analyst job application.*
     """)
 
 
